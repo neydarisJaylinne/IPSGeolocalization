@@ -1,0 +1,1 @@
+INSERT INTO Statistics(id, countryCode, distance) VALUES (1, 'AAA', 1.5);
