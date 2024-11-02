@@ -79,7 +79,7 @@ Go to src/main/resources/static/index.html, press rigth click and run index.html
 
 **Client:** Html, JS
 
-**Server:** SQL, JAVA, SpringBoot, JPA, Docker, Maven
+**Server:** SQL, JAVA 17, SpringBoot, JPA, Docker, Maven
 
 ## Architecture
 
