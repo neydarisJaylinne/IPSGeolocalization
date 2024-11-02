@@ -3,8 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.dtos.FixerResponseDto;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,8 +12,6 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.math.RoundingMode.UP;
 
 @Service
 public class UtilsService {

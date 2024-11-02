@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.Entities.Statistics;
+import com.example.demo.Entities.IpStatistics;
 import com.example.demo.Repository.IStatisticsRepository;
 import com.example.demo.Repository.StatisticsRepository;
 import com.example.demo.clients.FixerClient;
@@ -8,15 +8,14 @@ import com.example.demo.clients.IpapiClient;
 import com.example.demo.dtos.CountryInfoDto;
 import com.example.demo.dtos.IpapiResponseDto;
 import com.example.demo.dtos.LanguageDto;
-import org.hibernate.exception.DataException;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.List;
-import java.util.Set;
 
 import static com.example.demo.Service.UtilsService.BUENOS_AIRES_LAT;
 import static com.example.demo.Service.UtilsService.BUENOS_AIRES_LON;
@@ -29,9 +28,11 @@ public class IpapiService {
     private final IpapiClient ipapiClient;
     private final FixerClient fixerClient;
     private final UtilsService utilsService;
+    @Autowired
+    private IStatisticsRepository statisticsRepository;
 
 
-    public IpapiService(com.example.demo.clients.IpapiClient ipapiClient, FixerClient fixerClient, UtilsService utilsService) {
+    public IpapiService(IpapiClient ipapiClient, FixerClient fixerClient, UtilsService utilsService) {
         this.ipapiClient = ipapiClient;
         this.fixerClient = fixerClient;
         this.utilsService = utilsService;
@@ -55,11 +56,11 @@ public class IpapiService {
     }
 
     private void saveInvocation(IpapiResponseDto ipapiResponseDto, Double distanceFromBuenosAires) {
-        Statistics statistics = new Statistics();
-        statistics.setCountryCode(ipapiResponseDto.getCountry_code());
-        statistics.setDistance(distanceFromBuenosAires);
+        IpStatistics ipStatistics = new IpStatistics();
+        ipStatistics.setCountryCode(ipapiResponseDto.getCountry_code());
+        ipStatistics.setDistance(distanceFromBuenosAires);
         try {
-            StatisticsRepository.save(statistics);
+            statisticsRepository.save(ipStatistics);
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar la estadística en el repositorio", e);
         }

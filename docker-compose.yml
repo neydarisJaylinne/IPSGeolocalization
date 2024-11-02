@@ -1,0 +1,31 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    mem_limit: 512m
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:sqlserver://meli_geolocation:1434;database=master;Trusted_Connection=True;instanceName=SQLEXPRESS;databaseName=Lologre;trustServerCertificate=true
+      DB_USER_NAME: 'sa'
+      DB_PASSWORD: 'adm123'
+    depends_on:
+      - meli_geolocation
+  meli_geolocation:
+    container_name: mssql-db
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    ports:
+      - '1433:1433'
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'adm123'
+      MSSQL_DATA_DIR: /var/opt/mssql/data
+      MSSQL_PID: 'Developer'
+      MSSQL_TCP_PORT: 1433
+    restart: always
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets

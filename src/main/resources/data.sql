@@ -1,1 +1,1 @@
-INSERT INTO Statistics(id, countryCode, distance) VALUES (1, 'AAA', 1.5);
+INSERT INTO ip_statistics(country_code, distance) VALUES ('AA', 1.5);
