@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class IpapiClient {
 
     private static final String BASE_URL = "https://api.ipapi.com/api/";
-    private static final String ACCESS_KEY = "dcfb1095b17588b7eb9418d22aa82231";
+    private static final String ACCESS_KEY = "27713ddfa3ee5eedd943ef4acc095c42";
 
     private final WebClient webClient;
     //private final ObjectMapper objectMapper;

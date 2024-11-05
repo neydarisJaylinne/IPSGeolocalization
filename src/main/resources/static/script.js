@@ -1,13 +1,13 @@
 function getMinDistance() {
-    fetchDistanceStatistics('http://localhost:8080/statistics/min');
+    MinMaxDistanceStatistics('http://localhost:8080/statistics/min');
 }
 
 function getMaxDistance() {
-    fetchDistanceStatistics('http://localhost:8080/statistics/max');
+    MinMaxDistanceStatistics('http://localhost:8080/statistics/max');
 }
 
 function getAverageDistance() {
-    fetchDistanceStatistics('http://localhost:8080/statistics/average');
+    AverageDistanceStatistics('http://localhost:8080/statistics/average');
 }
 
 function callData() {
@@ -27,11 +27,12 @@ function isValidIP(ip) {
     const ipPattern = /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$/;
     return ipPattern.test(ip);
 }
-async function getData(endpoint, ip) {
+
+function getData(endpoint, ip) {
     const resultDiv = document.getElementById("ipResult");
     resultDiv.innerHTML = '';
 
-    await fetch(endpoint + ip)
+    fetch(endpoint + ip)
         .then(response => {
             console.log(ip);
             if (!response.ok) {
@@ -41,6 +42,7 @@ async function getData(endpoint, ip) {
             return response.json()
         })
         .then(data => {
+           // console.log(data);
             try {
                 const distance = data.distanceToBuenosAires; // Now a direct value
                 const userLatitude = data.latitude; // User's latitude
@@ -52,8 +54,17 @@ async function getData(endpoint, ip) {
                 }).join(', ');
                 const formattedTimeZones = data.timeZones.map(timezone => {
                     const date = new Date(timezone);
-                    const utcTime = date.toLocaleTimeString('es-ES', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                    const localTime = date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    const utcTime = date.toLocaleTimeString('es-ES', {
+                        timeZone: 'UTC',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    const localTime = date.toLocaleTimeString('es-ES', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
                     const offsetHours = -(date.getTimezoneOffset() / 60);
                     const offset = offsetHours === 0 ? "UTC" : `UTC${offsetHours > 0 ? `+${offsetHours}` : offsetHours}`;
                     return `${utcTime} (UTC) o ${localTime} (${offset})`;
@@ -78,28 +89,60 @@ async function getData(endpoint, ip) {
         .catch(error => console.error('Error:', error));
 }
 
-async function fetchDistanceStatistics(endpoint) {
+async function MinMaxDistanceStatistics(endpoint) {
     let distanceResultDiv = document.getElementById('distanceResult');
     distanceResultDiv.innerHTML = ''; // Clear previous distance results
 
     try {
-        const response = await fetch(endpoint, {
-            method: 'GET',
-        });
 
-        if (!response.ok) {
-            throw new Error('Error fetching distance data: ' + response.status);
-        }
-
-        const distance = await response.text(); // Parse the response as text
-        const distanceNum = parseFloat(distance); // Convert the text response to a number
-
-        // Display the result in the distance result div
-        const resultHtml = `Distancia a Buenos Aires: ${distanceNum.toFixed(2)} kms`;
-        distanceResultDiv.innerHTML = resultHtml; // Update the HTML with the distance
-    } catch (error) {
+        fetch(endpoint)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching data: ' + response.status);
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data);
+                for(let i = 0; i < data.length; i ++ ) {
+                    console.log(data[i]);
+                    var values = data[i];
+                    const distanceNum = parseFloat(values.distance);
+                    const resultHtml = `Distancia a Buenos Aires: ${distanceNum.toFixed(2)} kms`;
+                    distanceResultDiv.innerHTML = resultHtml;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } catch
+        (error) {
         distanceResultDiv.innerHTML = `<span style="color:red;">${error.message}</span>`; // Show error message
-    } finally {
-        loadingIndicator.style.display = 'none'; // Hide loading indicator for distance
+    }
+}
+
+async function AverageDistanceStatistics(endpoint) {
+    let distanceResultDiv = document.getElementById('distanceResult');
+    distanceResultDiv.innerHTML = ''; // Clear previous distance results
+
+    try {
+        fetch(endpoint)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching data: ' + response.status);
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data);
+                for(let i = 0; i < data.length; i ++ ) {
+                    var value = data[i];
+                    const distanceNum = parseFloat(value);
+                    const resultHtml = `Valor promedio: ${distanceNum.toFixed(2)} kms`;
+                    distanceResultDiv.innerHTML = resultHtml;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } catch
+        (error) {
+        distanceResultDiv.innerHTML = `<span style="color:red;">${error.message}</span>`; // Show error message
     }
 }
