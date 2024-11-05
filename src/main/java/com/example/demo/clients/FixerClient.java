@@ -14,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class FixerClient {
 
     private static final String BASE_URL = "http://data.fixer.io/api";
-    private static final String ACCESS_KEY = "b8be67e765c71d0858634385d33648d7";
+    private static final String ACCESS_KEY = "7b6d60d4952b29f48205bcc49b26e4e4";
 
     private final WebClient webClient;
 

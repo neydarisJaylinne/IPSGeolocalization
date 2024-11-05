@@ -6,12 +6,14 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Entity
-public class IpStatistics {
+@Entity(name = "ip_statistics")
+public class IpStatistics implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;

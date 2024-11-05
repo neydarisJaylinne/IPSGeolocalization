@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-///qeu hace cada anotación
-
 @RestController
 @RequestMapping(path = "/ips", produces = "application/json; charset=utf-8")
 @RequiredArgsConstructor

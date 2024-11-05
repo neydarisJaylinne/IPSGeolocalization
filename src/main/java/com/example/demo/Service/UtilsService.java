@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class UtilsService {
                     .stream().filter(zoneId -> zoneId.toLowerCase()
                             .contains(countryName.toLowerCase())).toList();
             if (timeZone.isEmpty()) {
-                return null;
+                return new HashSet<>();
             }
         }
         return timeZone.stream()

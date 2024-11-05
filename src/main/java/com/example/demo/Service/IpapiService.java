@@ -1,8 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Entities.IpStatistics;
-import com.example.demo.Repository.IStatisticsRepository;
-import com.example.demo.Repository.StatisticsRepository;
+import com.example.demo.Repository.IIPStatisticsRepository;
 import com.example.demo.clients.FixerClient;
 import com.example.demo.clients.IpapiClient;
 import com.example.demo.dtos.CountryInfoDto;
@@ -29,7 +28,7 @@ public class IpapiService {
     private final FixerClient fixerClient;
     private final UtilsService utilsService;
     @Autowired
-    private IStatisticsRepository statisticsRepository;
+    private IIPStatisticsRepository statisticsRepository;
 
 
     public IpapiService(IpapiClient ipapiClient, FixerClient fixerClient, UtilsService utilsService) {

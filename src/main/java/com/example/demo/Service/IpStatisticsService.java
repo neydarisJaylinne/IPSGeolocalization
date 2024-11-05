@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Entities.IpStatistics;
-import com.example.demo.Repository.IStatisticsRepository;
+import com.example.demo.Repository.IIPStatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,30 +11,20 @@ import java.util.List;
 public class IpStatisticsService implements IIpStatisticsService{
 
     @Autowired
-    private IStatisticsRepository statisticsRepository;
+    private IIPStatisticsRepository statisticsRepository;
 
     @Override
     public List<IpStatistics> findMaxDistance() {
-        List<IpStatistics> list;
-        try {
-            list = statisticsRepository.findMaxDistance();
-        } catch (Exception e) {throw e;}
-        return list;
+        return statisticsRepository.findMaxDistance();
     }
 
     @Override
     public List<IpStatistics> findMinDistance() {
-        List<IpStatistics> list;
-        try {
-            list = statisticsRepository.findMinDistance();
-        } catch (Exception e) {throw e;}
-        return list;
+        return statisticsRepository.findMinDistance();
     }
 
     @Override
     public List<Double> findAverageDistance() {
-        List<Double> list;
-        list=statisticsRepository.findAverageDistance();
-        return list;
+        return statisticsRepository.findAverageDistance();
     }
 }
