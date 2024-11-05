@@ -22,7 +22,7 @@ public class UtilsService {
     public static final double BUENOS_AIRES_LAT = -34.61315;
     public static final double BUENOS_AIRES_LON = -58.37723;
 
-   public Set<String> getCurrentTimesByCountry(String countryCode, String countryName) {
+    public Set<String> getCurrentTimesByCountry(String countryCode, String countryName) {
 
         var timeZone = ZoneId.getAvailableZoneIds().stream().filter(zoneId -> zoneId.startsWith(countryCode)).toList();
 
@@ -42,7 +42,15 @@ public class UtilsService {
 
     public Currency getCurrencyByCountryCode(String countryCode) {
         Locale locale = new Locale("", countryCode);
-        return Currency.getInstance(locale);
+        try {
+            Currency currency = Currency.getInstance(locale);
+            if (currency == null) {
+                throw new IllegalArgumentException("No se encontró moneda para el código de país: " + countryCode);
+            }
+            return currency;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Código de país inválido o sin moneda definida: " + countryCode, e);
+        }
     }
 
     public double getDollarExchangeRate(FixerResponseDto fixerResponseDto, String currencyCode) {
@@ -51,9 +59,9 @@ public class UtilsService {
             return 0;
         }
 
-        var currencyToEur =fixerResponseDto.getRates().get(currencyCode);
+        var currencyToEur = fixerResponseDto.getRates().get(currencyCode);
         var eurToUsd = fixerResponseDto.getRates().get(USD_CODE);
-        return currencyToEur/eurToUsd;
+        return currencyToEur / eurToUsd;
     }
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -69,7 +77,7 @@ public class UtilsService {
     }
 
     public Double getDistanceFromBuenosAires(double latitude, double longitude) {
-        return  calculateDistance(BUENOS_AIRES_LAT, BUENOS_AIRES_LON, latitude, longitude);
+        return calculateDistance(BUENOS_AIRES_LAT, BUENOS_AIRES_LON, latitude, longitude);
     }
 
 }
