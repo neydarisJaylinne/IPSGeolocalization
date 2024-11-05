@@ -1,3 +1,11 @@
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  sql_server_data:
+    driver: local
+
 services:
   app:
     build:
@@ -7,24 +15,29 @@ services:
     ports:
       - "8084:8084"
     environment:
-      DB_URL: jdbc:sqlserver://meli_geolocation:1455;database=master;Trusted_Connection=True;instanceName=SQLEXPRESS;trustServerCertificate=true
-      DB_USER_NAME: 'sa'
-      DB_PASSWORD: 'adm123'
+      DB_SERVER: db  # The name of the database container (the "db" service)
+      DB_PORT: 1433
+      DB_NAME: master
+      DB_USER: sa  # Using the SQL Server 'sa' user
+      DB_PASSWORD: adm123 # The same password used for the sa user
+    networks:
+      - app-network
     depends_on:
       - meli_geolocation
   meli_geolocation:
     container_name: mssql-db
-    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    networks:
+      - app-network
     ports:
-      - '1455:1455'
+      - '1433:1433'
     environment:
-      ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: 'adm123'
-      MSSQL_DATA_DIR: /var/opt/mssql/data
-      MSSQL_PID: 'Developer'
-      MSSQL_TCP_PORT: 1433
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=adm123  # Strong password for the SQL Server sa account
+      - MSSQL_PID=Express
     restart: always
     volumes:
+      - ./sql-server-data:/var/opt/mssql
       - ./data:/var/opt/mssql/data
       - ./log:/var/opt/mssql/log
       - ./secrets:/var/opt/mssql/secrets

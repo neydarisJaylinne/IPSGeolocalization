@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.dtos.FixerResponseDto;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 
 import java.time.Instant;
@@ -14,8 +14,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
-public class UtilsService {
+@Component
+public class UtilsComponent {
 
     private static final double EARTH_RADIUS_KM = 6371;
     private static final String USD_CODE = "USD";

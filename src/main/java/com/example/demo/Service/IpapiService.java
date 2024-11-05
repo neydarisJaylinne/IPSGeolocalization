@@ -7,6 +7,7 @@ import com.example.demo.clients.IpapiClient;
 import com.example.demo.dtos.CountryInfoDto;
 import com.example.demo.dtos.IpapiResponseDto;
 import com.example.demo.dtos.LanguageDto;
+import jakarta.annotation.Resource;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,25 +17,26 @@ import java.util.Collections;
 import java.util.Currency;
 import java.util.List;
 
-import static com.example.demo.Service.UtilsService.BUENOS_AIRES_LAT;
-import static com.example.demo.Service.UtilsService.BUENOS_AIRES_LON;
+import static com.example.demo.Service.UtilsComponent.BUENOS_AIRES_LAT;
+import static com.example.demo.Service.UtilsComponent.BUENOS_AIRES_LON;
 
 
 /// logica de negocio, todos los metodos que operan con otros servicios
 @Service
 public class IpapiService {
 
+    @Resource
     private final IpapiClient ipapiClient;
     private final FixerClient fixerClient;
-    private final UtilsService utilsService;
+    private final UtilsComponent utilsComponent;
     @Autowired
     private IIPStatisticsRepository statisticsRepository;
 
 
-    public IpapiService(IpapiClient ipapiClient, FixerClient fixerClient, UtilsService utilsService) {
+    public IpapiService(IpapiClient ipapiClient, FixerClient fixerClient, UtilsComponent utilsComponent) {
         this.ipapiClient = ipapiClient;
         this.fixerClient = fixerClient;
-        this.utilsService = utilsService;
+        this.utilsComponent = utilsComponent;
     }
 
     public CountryInfoDto getCountryData(String ip) {
@@ -73,7 +75,7 @@ public class IpapiService {
         countryInfoDto.setIsoCode(ipapiResponseDto.getCountry_code());
         countryInfoDto.setLanguages(mapLanguages(ipapiResponseDto));
         setCurrencyData(countryInfoDto, ipapiResponseDto);
-        countryInfoDto.setTimeZones(utilsService.getCurrentTimesByCountry(ipapiResponseDto.getCountry_code(), ipapiResponseDto.getCountry_name()));
+        countryInfoDto.setTimeZones(utilsComponent.getCurrentTimesByCountry(ipapiResponseDto.getCountry_code(), ipapiResponseDto.getCountry_name()));
         setLocationData(countryInfoDto, ipapiResponseDto);
         return countryInfoDto;
     }
@@ -93,14 +95,14 @@ public class IpapiService {
     }
 
     private void setCurrencyData(CountryInfoDto countryInfoDto, IpapiResponseDto ipapiResponseDto) {
-        Currency currency = utilsService.getCurrencyByCountryCode(ipapiResponseDto.getCountry_code());
+        Currency currency = utilsComponent.getCurrencyByCountryCode(ipapiResponseDto.getCountry_code());
         countryInfoDto.setCurrencyCode(currency.getCurrencyCode());
         countryInfoDto.setCurrencyName(currency.getDisplayName());
         countryInfoDto.setCurrencyExchangeRateWithUsDollar(getCurrencyExchangeRate(currency.getCurrencyCode()));
     }
 
     private Double getCurrencyExchangeRate(String currencyCode) {
-        return utilsService.getDollarExchangeRate(fixerClient.getExchangeRates(), currencyCode);
+        return utilsComponent.getDollarExchangeRate(fixerClient.getExchangeRates(), currencyCode);
     }
 
     private void setLocationData(CountryInfoDto countryInfoDto, IpapiResponseDto ipapiResponseDto) {
@@ -110,7 +112,7 @@ public class IpapiService {
         countryInfoDto.setLongitude(longitude);
         countryInfoDto.setBuenosAiresLatitude(BUENOS_AIRES_LAT);
         countryInfoDto.setBuenosAiresLongitude(BUENOS_AIRES_LON);
-        countryInfoDto.setDistanceToBuenosAires(utilsService.getDistanceFromBuenosAires(latitude, longitude));
+        countryInfoDto.setDistanceToBuenosAires(utilsComponent.getDistanceFromBuenosAires(latitude, longitude));
     }
 
 

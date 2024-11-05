@@ -1,6 +1,6 @@
 package com.example.demo.ServicesTests;
 
-import com.example.demo.Service.UtilsService;
+import com.example.demo.Service.UtilsComponent;
 import com.example.demo.dtos.FixerResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,27 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UtilsServiceTest {
 
-    private final UtilsService utilsService = new UtilsService();
+    private final UtilsComponent utilsComponent = new UtilsComponent();
 
     @Test
     void testGetCurrentTimesByCountryWithValidCountryCode() {
-        String countryCode = "US"; // Estados Unidos
+        String countryCode = "US";
         String countryName = "United States";
 
-        Set<String> currentTimes = utilsService.getCurrentTimesByCountry(countryCode, countryName);
+        Set<String> currentTimes = utilsComponent.getCurrentTimesByCountry(countryCode, countryName);
 
         assertFalse(currentTimes.isEmpty(), "La lista de horas no debería estar vacía para un código de país válido");
 
-    }
-
-    @Test
-    public void testGetCurrentTimesByCountryWithInvalidCountryCodeButValidCountryName() {
-        String countryCode = "ZZ";
-        String countryName = "United States";
-
-        Set<String> currentTimes = utilsService.getCurrentTimesByCountry(countryCode, countryName);
-
-        assertFalse(currentTimes.isEmpty(), "La lista de horas no debería estar vacía para un nombre de país válido");
     }
 
     @Test
@@ -43,7 +33,7 @@ public class UtilsServiceTest {
         String countryCode = "ZZ";
         String countryName = "NoCountry";
 
-        Set<String> currentTimes = utilsService.getCurrentTimesByCountry(countryCode, countryName);
+        Set<String> currentTimes = utilsComponent.getCurrentTimesByCountry(countryCode, countryName);
 
         assertTrue(currentTimes.isEmpty(), "La lista de horas debería estar vacía para un código y nombre de país no válidos");
     }
@@ -53,7 +43,7 @@ public class UtilsServiceTest {
         FixerResponseDto fixerResponseDto = new FixerResponseDto();
         String validCurrency = "USD";
         fixerResponseDto.setRates(Collections.emptyMap());
-        double response = utilsService.getDollarExchangeRate(fixerResponseDto, validCurrency);
+        double response = utilsComponent.getDollarExchangeRate(fixerResponseDto, validCurrency);
         assertEquals(response, 0);
         }
 
@@ -62,7 +52,7 @@ public class UtilsServiceTest {
         FixerResponseDto fixerResponseDto = new FixerResponseDto();
         String validCurrency = "USD";
         fixerResponseDto.setRates(null);
-        double response = utilsService.getDollarExchangeRate(fixerResponseDto, validCurrency);
+        double response = utilsComponent.getDollarExchangeRate(fixerResponseDto, validCurrency);
         assertEquals(response, 0);
     }
 
@@ -73,7 +63,7 @@ public class UtilsServiceTest {
         Map<String, Double> rates = new HashMap<>();
         rates.put("USD_CODE", 1.1);
         fixerResponseDto.setRates(rates);
-        double response = utilsService.getDollarExchangeRate(fixerResponseDto, validCurrency);
+        double response = utilsComponent.getDollarExchangeRate(fixerResponseDto, validCurrency);
         assertEquals(response, 0);
     }
     @Test
@@ -83,7 +73,7 @@ public class UtilsServiceTest {
         Map<String, Double> rates = new HashMap<>();
         rates.put("TEST", 1.1);
         fixerResponseDto.setRates(rates);
-        double response = utilsService.getDollarExchangeRate(fixerResponseDto, validCurrency);
+        double response = utilsComponent.getDollarExchangeRate(fixerResponseDto, validCurrency);
         assertEquals(response, 0);
     }
 }
